@@ -5,6 +5,7 @@ import { CREATE_USER_APP, DEFAULT_APP_NAME } from '@/lib/consts.js';
 import { validateAppName } from './validate_appname.js';
 import { get_version } from './get_version.js';
 import { logger } from './logger.js';
+import { validate_import_alias } from './validate_import_alias.js';
 
 const availableHttpClients = ['express', 'fastify'] as const;
 type AvailableHttpClients = (typeof availableHttpClients)[number];
@@ -13,26 +14,26 @@ const availableORMs = ['prisma', 'drizzle', 'none'] as const;
 type AvailableORMs = (typeof availableORMs)[number];
 
 interface CliFlags {
-  noGit: boolean;
-  noInstall: boolean;
-  importAlias: string;
+  no_git: boolean;
+  no_install: boolean;
+  import_alias: string;
 }
 
 interface CliResults {
-  appName: string;
-  httpClient: AvailableHttpClients;
+  app_name: string;
+  http_client: AvailableHttpClients;
   orm: AvailableORMs;
   flags: CliFlags;
 }
 
 export const defaultOptions: CliResults = {
-  appName: DEFAULT_APP_NAME,
-  httpClient: 'express',
+  app_name: DEFAULT_APP_NAME,
+  http_client: 'express',
   orm: 'none',
   flags: {
-    noGit: false,
-    noInstall: false,
-    importAlias: '@/',
+    no_git: false,
+    no_install: false,
+    import_alias: '@/',
   },
 } as const;
 
@@ -61,45 +62,55 @@ export const run_cli = async () => {
 
   const cliProvidedName = program.args[0];
   if (cliProvidedName) {
-    cliResults.appName = cliProvidedName;
+    cliResults.app_name = cliProvidedName;
   }
 
   cliResults.flags = program.opts();
   if (!cliProvidedName) {
-    cliResults.appName = await promptAppName();
+    cliResults.app_name = await prompt_app_name();
   }
-  cliResults.httpClient = await promptHttpClient();
-  cliResults.orm = await promptORM();
+  cliResults.http_client = await prompt_http_client();
+  cliResults.orm = await prompt_orm();
+  if (!cliResults.flags.no_git) {
+    cliResults.flags.no_git = !(await prompt_git());
+  }
+  if (!cliResults.flags.no_install) {
+    cliResults.flags.no_install = !(await prompt_install());
+  }
+
+  cliResults.flags.import_alias = await prompt_import_alias();
 };
 
-const promptAppName = async (): Promise<string> => {
-  const { appName } = await inquirer.prompt<Pick<CliResults, 'appName'>>({
+const prompt_app_name = async (): Promise<string> => {
+  const { app_name } = await inquirer.prompt<Pick<CliResults, 'app_name'>>({
     name: 'appName',
     type: 'input',
     message: 'What will your awesome api be called?',
-    default: defaultOptions.appName,
+    default: defaultOptions.app_name,
     validate: validateAppName,
     transformer: (input: string) => {
       return input.trim();
     },
   });
 
-  return appName;
+  return app_name;
 };
 
-const promptHttpClient = async (): Promise<AvailableHttpClients> => {
-  const { httpClient } = await inquirer.prompt<Pick<CliResults, 'httpClient'>>({
+const prompt_http_client = async (): Promise<AvailableHttpClients> => {
+  const { http_client } = await inquirer.prompt<
+    Pick<CliResults, 'http_client'>
+  >({
     name: 'httpClient',
     type: 'list',
     message: 'What http client would you like to use?',
     choices: availableHttpClients,
-    default: defaultOptions.httpClient,
+    default: defaultOptions.http_client,
   });
 
-  return httpClient;
+  return http_client;
 };
 
-const promptORM = async (): Promise<AvailableORMs> => {
+const prompt_orm = async (): Promise<AvailableORMs> => {
   const { orm } = await inquirer.prompt<Pick<CliResults, 'orm'>>({
     name: 'orm',
     type: 'list',
@@ -109,4 +120,43 @@ const promptORM = async (): Promise<AvailableORMs> => {
   });
 
   return orm;
+};
+
+const prompt_git = async (): Promise<boolean> => {
+  const { git } = await inquirer.prompt<{ git: boolean }>({
+    name: 'git',
+    type: 'confirm',
+    message: 'Would you like to initialize a git repo for this project?',
+    default: true,
+  });
+
+  return git;
+};
+
+const prompt_install = async (): Promise<boolean> => {
+  const { install } = await inquirer.prompt<{ install: boolean }>({
+    name: 'install',
+    type: 'confirm',
+    message: 'Would you like to install dependencies now?',
+    default: true,
+  });
+
+  return install;
+};
+
+const prompt_import_alias = async (): Promise<string> => {
+  const { import_alias } = await inquirer.prompt<
+    Pick<CliFlags, 'import_alias'>
+  >({
+    name: 'importAlias',
+    type: 'input',
+    message: 'What import alias would you like configured?',
+    default: defaultOptions.flags.import_alias,
+    validate: validate_import_alias,
+    transformer: (input: string) => {
+      return input.trim();
+    },
+  });
+
+  return import_alias;
 };
