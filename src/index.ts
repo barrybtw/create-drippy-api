@@ -1,9 +1,10 @@
 import { logger } from '@/lib/logger.js';
+import { render_title } from './lib/render-title.js';
+import { run_cli } from './lib/cli.js';
 
 const main = async () => {
-  logger.info(
-    'Hello world! I am create-drippy-api! I am awesome... It is true!',
-  );
+  void render_title();
+  void run_cli();
 };
 
 main().catch((error) => {
