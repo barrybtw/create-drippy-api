@@ -6,4 +6,7 @@ const main = async () => {
   );
 };
 
-main();
+main().catch((error) => {
+  logger.error(error);
+  process.exit(1);
+});
