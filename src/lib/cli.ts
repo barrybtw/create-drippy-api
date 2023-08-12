@@ -79,11 +79,13 @@ export const run_cli = async () => {
   }
 
   cliResults.flags.import_alias = await prompt_import_alias();
+
+  return cliResults;
 };
 
 const prompt_app_name = async (): Promise<string> => {
   const { app_name } = await inquirer.prompt<Pick<CliResults, 'app_name'>>({
-    name: 'appName',
+    name: 'app_name',
     type: 'input',
     message: 'What will your awesome api be called?',
     default: defaultOptions.app_name,
@@ -100,7 +102,7 @@ const prompt_http_client = async (): Promise<AvailableHttpClients> => {
   const { http_client } = await inquirer.prompt<
     Pick<CliResults, 'http_client'>
   >({
-    name: 'httpClient',
+    name: 'http_client',
     type: 'list',
     message: 'What http client would you like to use?',
     choices: availableHttpClients,
@@ -148,7 +150,7 @@ const prompt_import_alias = async (): Promise<string> => {
   const { import_alias } = await inquirer.prompt<
     Pick<CliFlags, 'import_alias'>
   >({
-    name: 'importAlias',
+    name: 'import_alias',
     type: 'input',
     message: 'What import alias would you like configured?',
     default: defaultOptions.flags.import_alias,
