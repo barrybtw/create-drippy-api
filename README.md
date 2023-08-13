@@ -1,5 +1,5 @@
 <p align="center">
-  Interactive CLI to start up a Typescript based backend with your http framework and ORM of your choosing!
+  Interactive CLI to start up a Typescript based backend with your http framework of your choosing!
 </p>
 
 <h2 id="contributors">Contributors</h2>

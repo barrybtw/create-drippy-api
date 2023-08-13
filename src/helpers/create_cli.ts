@@ -3,7 +3,7 @@ import inquirer from 'inquirer';
 import { CREATE_USER_APP, DEFAULT_APP_NAME } from '@/consts.js';
 import { validateAppName } from '@/lib/validate_appname.js';
 import { get_version } from '@/lib/get_version.js';
-import { available_http_clients, available_orms } from '@/installers/index.js';
+import { available_http_clients } from '@/installers/index.js';
 
 interface CliFlags {
   no_git: boolean;
@@ -13,14 +13,12 @@ interface CliFlags {
 interface CliResults {
   app_name: string;
   http_client: available_http_clients;
-  orm: available_orms;
   flags: CliFlags;
 }
 
 export const defaultOptions: CliResults = {
   app_name: DEFAULT_APP_NAME,
   http_client: 'express',
-  orm: 'none',
   flags: {
     no_git: false,
     no_install: false,
@@ -60,7 +58,6 @@ export const run_cli = async () => {
     cliResults.app_name = await prompt_app_name();
   }
   cliResults.http_client = await prompt_http_client();
-  cliResults.orm = await prompt_orm();
   if (!cliResults.flags.no_git) {
     cliResults.flags.no_git = !(await prompt_git());
   }
@@ -98,18 +95,6 @@ const prompt_http_client = async (): Promise<available_http_clients> => {
   });
 
   return http_client;
-};
-
-const prompt_orm = async (): Promise<available_orms> => {
-  const { orm } = await inquirer.prompt<Pick<CliResults, 'orm'>>({
-    name: 'orm',
-    type: 'list',
-    message: 'What ORM would you like to use?',
-    choices: available_orms,
-    default: defaultOptions.orm,
-  });
-
-  return orm;
 };
 
 const prompt_git = async (): Promise<boolean> => {

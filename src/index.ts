@@ -22,11 +22,8 @@ const main = async () => {
   const {
     app_name,
     http_client,
-    orm,
     flags: { no_git, no_install },
   } = await run_cli();
-  logger.info('app_name:', app_name, 'http_client:', http_client, 'orm:', orm);
-  logger.info('flags:', 'no_git:', no_git, 'no_install:', no_install);
 
   // e.g. dir/@mono/app returns ["@mono/app", "dir/app"]
   const [scopedAppName, _appDir] = parseNameAndPath(app_name);
@@ -39,7 +36,6 @@ const main = async () => {
     http_client,
     no_git,
     no_install,
-    orm,
     project_name: scopedAppName,
   });
 
