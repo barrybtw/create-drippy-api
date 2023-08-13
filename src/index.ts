@@ -10,6 +10,7 @@ import path from 'path';
 import { PackageJson } from 'type-fest';
 import { get_version } from './lib/get_version.js';
 import { install_deps } from './helpers/install_deps.js';
+import { initializeGit } from './helpers/git.js';
 
 type CDAPackageJson = PackageJson & {
   cdaMetadata?: {
@@ -54,6 +55,12 @@ const main = async () => {
   if (!no_install) {
     await install_deps({ project_dir });
   }
+
+  if (!no_git) {
+    await initializeGit(project_dir);
+  }
+
+  process.exit(0);
 };
 
 main().catch((error) => {
