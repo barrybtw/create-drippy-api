@@ -1,14 +1,9 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
-import { CREATE_USER_APP, DEFAULT_APP_NAME } from '@/lib/consts.js';
-import { validateAppName } from './validate_appname.js';
-import { get_version } from './get_version.js';
-
-const availableHttpClients = ['express', 'fastify'] as const;
-type AvailableHttpClients = (typeof availableHttpClients)[number];
-
-const availableORMs = ['prisma', 'drizzle', 'none'] as const;
-type AvailableORMs = (typeof availableORMs)[number];
+import { CREATE_USER_APP, DEFAULT_APP_NAME } from '@/consts.js';
+import { validateAppName } from '@/lib/validate_appname.js';
+import { get_version } from '@/lib/get_version.js';
+import { available_http_clients, available_orms } from '@/installers/index.js';
 
 interface CliFlags {
   no_git: boolean;
@@ -17,8 +12,8 @@ interface CliFlags {
 
 interface CliResults {
   app_name: string;
-  http_client: AvailableHttpClients;
-  orm: AvailableORMs;
+  http_client: available_http_clients;
+  orm: available_orms;
   flags: CliFlags;
 }
 
@@ -91,26 +86,26 @@ const prompt_app_name = async (): Promise<string> => {
   return app_name;
 };
 
-const prompt_http_client = async (): Promise<AvailableHttpClients> => {
+const prompt_http_client = async (): Promise<available_http_clients> => {
   const { http_client } = await inquirer.prompt<
     Pick<CliResults, 'http_client'>
   >({
     name: 'http_client',
     type: 'list',
     message: 'What http client would you like to use?',
-    choices: availableHttpClients,
+    choices: available_http_clients,
     default: defaultOptions.http_client,
   });
 
   return http_client;
 };
 
-const prompt_orm = async (): Promise<AvailableORMs> => {
+const prompt_orm = async (): Promise<available_orms> => {
   const { orm } = await inquirer.prompt<Pick<CliResults, 'orm'>>({
     name: 'orm',
     type: 'list',
     message: 'What ORM would you like to use?',
-    choices: availableORMs,
+    choices: available_orms,
     default: defaultOptions.orm,
   });
 

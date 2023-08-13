@@ -1,0 +1,5 @@
+{
+  "watch": ["src"],
+  "ext": "mts,cts,json",
+  "exec": "ts-node ./src/index.mts"
+}
