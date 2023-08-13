@@ -11,6 +11,7 @@ import { PackageJson } from 'type-fest';
 import { get_version } from './lib/get_version.js';
 import { install_deps } from './helpers/install_deps.js';
 import { initializeGit } from './helpers/git.js';
+import { logNextSteps } from './helpers/next_steps.js';
 
 type CDAPackageJson = PackageJson & {
   cdaMetadata?: {
@@ -27,7 +28,7 @@ const main = async () => {
   } = await run_cli();
 
   // e.g. dir/@mono/app returns ["@mono/app", "dir/app"]
-  const [scopedAppName, _appDir] = parseNameAndPath(app_name);
+  const [scopedAppName, appDir] = parseNameAndPath(app_name);
 
   if (!scopedAppName) {
     throw new Error('No app name provided');
@@ -59,6 +60,12 @@ const main = async () => {
   if (!no_git) {
     await initializeGit(project_dir);
   }
+
+  await logNextSteps({
+    projectDir: project_dir,
+    projectName: appDir,
+    noInstall: no_install,
+  });
 
   process.exit(0);
 };
