@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
-import { CREATE_USER_APP, DEFAULT_APP_NAME } from '@/lib/consts.js';
+import { CREATE_USER_APP, DEFAULT_APP_NAME } from '@/consts.js';
 import { validateAppName } from './validate_appname.js';
 import { get_version } from './get_version.js';
 

@@ -6,4 +6,10 @@ export const logger = {
   error(...args: unknown[]) {
     console.log(chalk.red('ERROR:', ...args));
   },
+  warn(...args: unknown[]) {
+    console.log(chalk.yellow('WARN:', ...args));
+  },
+  success(...args: unknown[]) {
+    console.log(chalk.green('SUCCESS:', ...args));
+  },
 };
