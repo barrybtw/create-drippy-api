@@ -43,5 +43,5 @@
     "skipLibCheck": true,
     "useDefineForClassFields": true
   },
-  "include": ["src", "tsup.config.ts", "ascii.txt"]
+  "include": ["src", "tsup.config.ts"]
 }

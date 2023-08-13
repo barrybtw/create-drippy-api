@@ -1,4 +1,3 @@
-import fs from 'fs/promises';
 import gradient from 'gradient-string';
 
 const poimandres_theme = {

@@ -1,6 +1,6 @@
 {
   "name": "create-drippy-api",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Create a typescript based api with a single command",
   "license": "MIT",
   "main": "index.js",
