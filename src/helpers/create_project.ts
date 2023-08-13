@@ -33,7 +33,7 @@ export const create_project = async ({
 
   switch (http_client) {
     case 'express': {
-      express_installer();
+      express_installer({ project_dir });
       logger.info(`\nInstalling express...\n`);
       break;
     }
@@ -55,6 +55,10 @@ export const create_project = async ({
     }
     case 'drizzle': {
       logger.info(`\nInstalling drizzle...\n`);
+      break;
+    }
+    case 'none': {
+      logger.info(`\nSkipping ORM...\n`);
       break;
     }
     default: {

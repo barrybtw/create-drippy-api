@@ -3,8 +3,19 @@ import '@total-typescript/ts-reset';
 import { logger } from '@/lib/logger.js';
 import { render_title } from './lib/render-title.js';
 import { run_cli } from './helpers/create_cli.js';
+import fs from 'fs-extra';
 import { parseNameAndPath } from './lib/parse_name_and_path.js';
 import { create_project } from './helpers/create_project.js';
+import path from 'path';
+import { PackageJson } from 'type-fest';
+import { get_version } from './lib/get_version.js';
+import { install_deps } from './helpers/install_deps.js';
+
+type CDAPackageJson = PackageJson & {
+  cdaMetadata?: {
+    initVersion: string;
+  };
+};
 
 const main = async () => {
   void render_title();
@@ -32,7 +43,21 @@ const main = async () => {
     project_name: scopedAppName,
   });
 
-  logger.info('project_dir:', project_dir);
+  logger.info(`\nCreated project at ${project_dir}\n`);
+
+  // Write name to package.json
+  const pkgJson = fs.readJSONSync(
+    path.join(project_dir, 'package.json'),
+  ) as CDAPackageJson;
+  pkgJson.name = scopedAppName;
+  pkgJson.cdaMetadata = { initVersion: get_version() };
+  fs.writeJSONSync(path.join(project_dir, 'package.json'), pkgJson, {
+    spaces: 2,
+  });
+
+  if (!no_install) {
+    await install_deps({ project_dir });
+  }
 };
 
 main().catch((error) => {
