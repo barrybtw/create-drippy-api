@@ -1,11 +1,8 @@
-import chalk from 'chalk';
 import { Command } from 'commander';
 import inquirer from 'inquirer';
 import { CREATE_USER_APP, DEFAULT_APP_NAME } from '@/lib/consts.js';
 import { validateAppName } from './validate_appname.js';
 import { get_version } from './get_version.js';
-import { logger } from './logger.js';
-import { validate_import_alias } from './validate_import_alias.js';
 
 const availableHttpClients = ['express', 'fastify'] as const;
 type AvailableHttpClients = (typeof availableHttpClients)[number];
@@ -16,7 +13,6 @@ type AvailableORMs = (typeof availableORMs)[number];
 interface CliFlags {
   no_git: boolean;
   no_install: boolean;
-  import_alias: string;
 }
 
 interface CliResults {
@@ -33,7 +29,6 @@ export const defaultOptions: CliResults = {
   flags: {
     no_git: false,
     no_install: false,
-    import_alias: '@/',
   },
 } as const;
 
@@ -77,8 +72,6 @@ export const run_cli = async () => {
   if (!cliResults.flags.no_install) {
     cliResults.flags.no_install = !(await prompt_install());
   }
-
-  cliResults.flags.import_alias = await prompt_import_alias();
 
   return cliResults;
 };
@@ -144,21 +137,4 @@ const prompt_install = async (): Promise<boolean> => {
   });
 
   return install;
-};
-
-const prompt_import_alias = async (): Promise<string> => {
-  const { import_alias } = await inquirer.prompt<
-    Pick<CliFlags, 'import_alias'>
-  >({
-    name: 'import_alias',
-    type: 'input',
-    message: 'What import alias would you like configured?',
-    default: defaultOptions.flags.import_alias,
-    validate: validate_import_alias,
-    transformer: (input: string) => {
-      return input.trim();
-    },
-  });
-
-  return import_alias;
 };

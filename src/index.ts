@@ -1,3 +1,5 @@
+import '@total-typescript/ts-reset';
+
 import { logger } from '@/lib/logger.js';
 import { render_title } from './lib/render-title.js';
 import { run_cli } from './lib/cli.js';

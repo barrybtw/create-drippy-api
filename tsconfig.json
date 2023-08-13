@@ -23,12 +23,6 @@
 
     /* TYPE CHECKING RULES */
     "strict": true,
-    // "noImplicitAny": true, // Included in "Strict"
-    // "noImplicitThis": true, // Included in "Strict"
-    // "strictBindCallApply": true, // Included in "Strict"
-    // "strictFunctionTypes": true, // Included in "Strict"
-    // "strictNullChecks": true, // Included in "Strict"
-    // "strictPropertyInitialization": true, // Included in "Strict"
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
