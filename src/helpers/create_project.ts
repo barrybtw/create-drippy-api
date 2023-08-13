@@ -3,6 +3,8 @@ import path from 'path';
 import { scaffold_base } from './scaffold_base.js';
 import { logger } from '@/lib/logger.js';
 import { available_http_clients, available_orms } from '@/installers/index.js';
+import { express_installer } from '@/installers/express.js';
+import { fastify_installer } from '@/installers/fastify.js';
 
 interface CreateProjectOptions {
   project_name: string;
@@ -31,15 +33,17 @@ export const create_project = async ({
 
   switch (http_client) {
     case 'express': {
+      express_installer();
       logger.info(`\nInstalling express...\n`);
       break;
     }
     case 'fastify': {
+      fastify_installer();
       logger.info(`\nInstalling fastify...\n`);
       break;
     }
     default: {
-      logger.info(`\nInstalling ${http_client}...\n`);
+      logger.error(`\nHTTP Client not specified...\n`);
       break;
     }
   }
@@ -54,7 +58,7 @@ export const create_project = async ({
       break;
     }
     default: {
-      logger.info(`\nInstalling ${orm}...\n`);
+      logger.error(`\nORM  not specified...\n`);
       break;
     }
   }
